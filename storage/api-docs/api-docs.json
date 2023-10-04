@@ -1,0 +1,95 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel project api",
+        "description": "php artisan l5-swagger:generate -> command to generate new doc",
+        "version": "0.1"
+    },
+    "paths": {
+        "/sanctum/csrf-cookie": {
+            "get": {
+                "operationId": "863bdda6a1b5cf6b55624b4647c29580",
+                "responses": {
+                    "204": {
+                        "description": "Request to take cookie",
+                        "headers": {
+                            "Set-Cookie": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "operationId": "37d22cc157deecb6a9c8737458f88f58",
+                "parameters": [
+                    {
+                        "name": "X-XSRF-TOKEN",
+                        "in": "cookie"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "name": "asd",
+                                "password": "asd"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request to take cookie",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user": {
+            "get": {
+                "operationId": "e6ff13e408e76cbbdbe5606d9b79cf9d",
+                "parameters": [
+                    {
+                        "name": "X-XSRF-TOKEN",
+                        "in": "cookie"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An example endpoint",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "X-XSRF-TOKEN",
+                "in": "header"
+            }
+        }
+    }
+}
