@@ -17,8 +17,8 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        $userRole = Role::query()->whereIn('name', $roles)->first();
-        if (!$userRole) {
+        $userRole = Role::query()->where('id', $request->user()->role_id)->first();
+        if (!in_array($userRole->name, $roles)) {
             return response()->json(['message' => "No permission"], 403);
         }
         return $next($request);

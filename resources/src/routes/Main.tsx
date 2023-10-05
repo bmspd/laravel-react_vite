@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
-import { useTypedDispatch, useTypedSelector } from './hooks/storeHooks'
-import { selectIsAuth } from './store/reducers/AuthSlice/selectors'
-import { setAuth } from './store/reducers/AuthSlice/AuthSlice'
+import { useTypedDispatch, useTypedSelector } from '../hooks/storeHooks'
+import { selectIsAuth } from '../store/reducers/AuthSlice/selectors'
+import { setAuth } from '../store/reducers/AuthSlice/AuthSlice'
 
-function App() {
+const Main = () => {
   const isAuth = useTypedSelector(selectIsAuth)
   const dispatch = useTypedDispatch()
   const [name, setName] = useState('')
   const [pass, setPass] = useState('')
+  const [userId, setUserId] = useState('')
   return (
     <div
       style={{
@@ -43,11 +44,22 @@ function App() {
       >
         LOGIN
       </button>
-      <button onClick={() => axios.get('http://localhost:8000/api/users')}>
-        TESTING
+      <button
+        onClick={() => axios.get('http://localhost:8000/api/users?per_page=10&include[0]=role')}
+      >
+        GET USERS
       </button>
+      <button
+        onClick={() => axios.get(`http://localhost:8000/api/users/${userId}?include[0]=role`)}
+      >
+        GET USER BY ID
+      </button>
+      <input
+        placeholder="user id"
+        onChange={(e) => setUserId(e.target.value)}
+      />
     </div>
   )
 }
 
-export default App
+export default Main

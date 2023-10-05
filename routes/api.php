@@ -25,8 +25,12 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [ApiAuthController::class, 'login']);
 
     Route::middleware('auth:sanctum')->get('/logout', [ApiAuthController::class, 'logout']);
+    Route::middleware('auth:sanctum')->get('/who-am-i', [ApiAuthController::class, 'whoAmI']);
 });
 
-Route::group(['prefix' => 'users'], function() {
-    Route::middleware(['auth:sanctum', 'role:admin'])->get('/', [UsersController::class, 'getAll']);
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('users')->group(function() {
+    Route::get('/', [UsersController::class, 'getAll']);
+    Route::get('/{userId}', [UsersController::class, 'getById']);
 });
+
+

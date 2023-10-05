@@ -11,7 +11,7 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended"
     ],
-    "ignorePatterns": [".eslintrc.cjs", "vite.config.ts"],
+    "ignorePatterns": [".eslintrc.cjs", "vite.config.ts", "*.config.js" ],
     "overrides": [
         {
             "env": {
@@ -39,6 +39,7 @@ module.exports = {
         'react/react-in-jsx-scope': 0,
         'import/prefer-default-export': 0,
         '@typescript-eslint/semi': 0,
+        'react/function-component-definition': 0,
         'no-param-reassign': ['error', {
             props: true,
             ignorePropertyModificationsFor: [

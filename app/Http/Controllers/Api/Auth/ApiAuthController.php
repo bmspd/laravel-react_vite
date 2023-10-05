@@ -67,11 +67,15 @@ class ApiAuthController extends Controller
 
         if (Auth::attempt($creds)) {
             $request->session()->regenerate();
-            return response()->json(null, 204);
+            $user = User::with('role')->where('id', $request->user()->id)->first();
+            return response()->json($user);
         }
         return response()->json(['credentials' => 'wrong creds'], 403);
     }
-
+    public function whoAmI(Request $request):JsonResponse {
+        $user = User::with('role')->where('id', $request->user()->id)->first();
+        return response()->json($user);
+    }
     public function logout():JsonResponse {
         Auth::guard('web')->logout();
         return response()->json(null, 204);
