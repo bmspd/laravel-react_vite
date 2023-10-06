@@ -9,7 +9,8 @@ module.exports = {
         'airbnb/hooks',
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "prettier"
     ],
     "ignorePatterns": [".eslintrc.cjs", "vite.config.ts", "*.config.js" ],
     "overrides": [
@@ -33,7 +34,8 @@ module.exports = {
     },
     "plugins": [
         "@typescript-eslint",
-        "react"
+        "react",
+        "prettier"
     ],
     "rules": {
         'react/react-in-jsx-scope': 0,
@@ -46,5 +48,9 @@ module.exports = {
                 'state',
             ]
         }],
+        'react/jsx-props-no-spreading': 0,
+        'react/button-has-type': 0,
+        'react/prop-types': 0,
+        'react-hooks/exhaustive-deps': 0
     },
 }

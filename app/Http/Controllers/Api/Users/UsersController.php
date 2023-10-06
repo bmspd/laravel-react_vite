@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Serializers\DataSerializer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Transformers\UserTransformer;
@@ -19,7 +20,8 @@ class UsersController extends Controller
             ->collection($users)
             ->transformWith(new UserTransformer())
             ->paginateWith(new IlluminatePaginatorAdapter($users))
-            ->parseIncludes($includes);
+            ->parseIncludes($includes)
+            ->serializeWith(new DataSerializer());
         return response()->json($data);
     }
     public function getById(Request $request, string $userId):JsonResponse {
@@ -29,7 +31,8 @@ class UsersController extends Controller
         $data = fractal()
             ->item($user)
             ->transformWith(new UserTransformer())
-            ->parseIncludes($includes);
+            ->parseIncludes($includes)
+            ->serializeWith(new DataSerializer());
         return response()->json($data);
     }
 }

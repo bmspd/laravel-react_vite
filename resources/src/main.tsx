@@ -2,9 +2,13 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { store } from './store/store'
-import Main from './routes/Main';
+import Main from './routes/Main/Main';
 import MainLayout from './layouts/MainLayout';
 import './main.scss'
+import AuthLayout from './layouts/AuthLayout';
+import LoginPage from './routes/Login/LoginPage';
+import SignUpPage from './routes/SignUp/SignUpPage';
+import GetUserInfoLayout from "./layouts/GetUserInfoLayout";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +19,23 @@ const router = createBrowserRouter([
         element: <Main />,
 
       },
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+      {
+        path: '/sign-up',
+        element: <SignUpPage />,
+      },
+      {
+        element: <AuthLayout />,
+        children: [
+          {
+            path: '/test',
+            element: <div>TEST</div>,
+          },
+        ],
+      },
     ],
   },
   { path: '*', element: <div>NOT FOUND 404!!!</div> },
@@ -24,7 +45,9 @@ const root = document.getElementById('root')
 if (root) {
   createRoot(root).render(
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <GetUserInfoLayout>
+        <RouterProvider router={router} />
+      </GetUserInfoLayout>
     </Provider>,
   )
 }

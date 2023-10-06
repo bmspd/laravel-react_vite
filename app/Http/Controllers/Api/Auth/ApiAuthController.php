@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Serializers\DataSerializer;
+use App\Transformers\UserTransformer;
 use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -67,14 +69,21 @@ class ApiAuthController extends Controller
 
         if (Auth::attempt($creds)) {
             $request->session()->regenerate();
-            $user = User::with('role')->where('id', $request->user()->id)->first();
-            return response()->json($user);
+            $includes = $request->include ?? [];
+            $data = fractal($request->user())
+                ->transformWith(new UserTransformer())
+                ->parseIncludes($includes)
+                ->serializeWith(new DataSerializer());
+            return response()->json($data);
         }
         return response()->json(['credentials' => 'wrong creds'], 403);
     }
     public function whoAmI(Request $request):JsonResponse {
-        $user = User::with('role')->where('id', $request->user()->id)->first();
-        return response()->json($user);
+        $data = fractal($request->user())
+            ->transformWith(new UserTransformer())
+            ->parseIncludes(['role'])
+            ->serializeWith(new DataSerializer());
+        return response()->json($data);
     }
     public function logout():JsonResponse {
         Auth::guard('web')->logout();
