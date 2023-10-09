@@ -7,6 +7,7 @@ import { useTypedDispatch, useTypedSelector } from '../hooks/storeHooks'
 import { logout } from '../store/reducers/AuthSlice/asyncThunks'
 import { resetStore } from '../store/reducers/AuthSlice/AuthSlice'
 import {toggleIsMenuOpen} from "../store/reducers/InterfaceSlice/InterfaceSlice";
+import Dropdown from "../components/Dropdowns/Dropdown";
 
 const Header = () => {
   const navigate = useNavigate()
@@ -21,7 +22,7 @@ const Header = () => {
       <div className="flex gap-4 items-center">
         {isAuth ? (
           <>
-            {user?.name}
+            <Dropdown />
             <Button
               onClick={() => {
                 dispatch(logout())

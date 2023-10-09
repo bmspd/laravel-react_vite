@@ -25,11 +25,11 @@ class ContentTypeStatusSeeder extends Seeder
         $finished = ContentStatus::query()->create(['name' => 'finished']);
         $postponed = ContentStatus::query()->create(['name' => 'postponed']);
         $rereading = ContentStatus::query()->create(['name' => 'rereading']);
-        $reviewing = ContentStatus::query()->create(['name' => 'reviewing']);
-        $viewing = ContentStatus::query()->create(['name' => 'viewing']);
+        $rewatching = ContentStatus::query()->create(['name' => 'rewatching']);
+        $watching = ContentStatus::query()->create(['name' => 'watching']);
         $reading = ContentStatus::query()->create(['name' => 'reading']);
 
-        $viewIds = [$planned->id, $viewed->id, $postponed->id, $reviewing->id, $viewing->id];
+        $viewIds = [$planned->id, $viewed->id, $postponed->id, $rewatching->id, $watching->id];
         $readIds = [$planned->id, $finished->id, $postponed->id, $rereading->id, $reading->id];
         $anime->contentStatuses()->attach($viewIds);
         $films->contentStatuses()->attach($viewIds);

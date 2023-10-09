@@ -20,7 +20,7 @@ class ApiAuthController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/sanctum/csrf-cookie",
+     *     path="/api/auth/csrf-cookie",
      *     @OA\Response(
      *     response="204",
      *     description="Request to take cookie",

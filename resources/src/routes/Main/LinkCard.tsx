@@ -12,7 +12,7 @@ type LinkCardProps = {
 }
 const LinkCard: React.FC<LinkCardProps> = ({ title, description, icon, imgUrl, buttonText, linkTo }) => {
   return (
-    <div className="drop-shadow-xl cursor-pointer w-56 h-72 border-solid rounded-xl border border-none relative flex flex-col overflow-hidden hover:scale-105 transition-all duration-300">
+    <div className="drop-shadow-xl hover:drop-shadow-2xl bottom-0 relative hover:bottom-4 cursor-pointer w-56 h-72 border-solid rounded-xl border border-none relative flex flex-col overflow-hidden transition-all duration-300">
       <div className="h-1/2 overflow-hidden rounded-t-xl">
         <img className="min-w-full h-full max-w-none" src={imgUrl} alt="Main links card" />
       </div>

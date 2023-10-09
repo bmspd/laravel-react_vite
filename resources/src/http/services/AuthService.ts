@@ -26,7 +26,7 @@ export default class AuthService {
   }
 
   static async getCookies() {
-    return $http.get('/sanctum/csrf-cookie')
+    return $http.get('auth/csrf-cookie')
   }
 
   static async signUp(data: SignUpRequestBody) {

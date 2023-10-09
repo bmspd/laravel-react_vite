@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\ApiAuthController;
+use App\Http\Controllers\Api\Contents\ContentsController;
 use App\Http\Controllers\Api\Users\UsersController;
 use App\Http\Middleware\EnsureUserHasRole;
 use Illuminate\Http\Request;
@@ -31,6 +32,15 @@ Route::group(['prefix' => 'auth'], function () {
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('users')->group(function() {
     Route::get('/', [UsersController::class, 'getAll']);
     Route::get('/{userId}', [UsersController::class, 'getById']);
+});
+
+Route::middleware(['auth:sanctum'])->prefix('contents')->group(function() {
+   Route::get('/', [ContentsController::class, 'getContents']);
+   Route::post('/request', [ContentsController::class, 'requestContent']);
+   Route::middleware(['role:admin'])->group(function () {
+       Route::get('/request/{id}/cancel', [ContentsController::class, 'cancelRequestContent']);
+       Route::get('/request/{id}/approve', [ContentsController::class, 'approveRequestContent']);
+   });
 });
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { IconKeyframes,IconBookmarks, IconUsers, IconApps } from '@tabler/icons-react'
 import contentUrl from '../../images/content-link-bg.jpg'
 import listUrl from '../../images/list-link-bg.jpg'
@@ -7,7 +7,6 @@ import requestUrl from '../../images/request-link-bg.jpg'
 import LinkCard from './LinkCard'
 
 const Main = () => {
-  const test = 'a'
   return (
     <div>
       <div className="mt-8 flex flex-col gap-4 justify-center items-center">
