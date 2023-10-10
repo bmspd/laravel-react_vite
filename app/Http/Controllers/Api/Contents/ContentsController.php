@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api\Contents;
 
 use App\Enums\CurrentContentStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Contents\CreateContentRequest;
+use App\Http\Requests\Contents\UpdateContentRequest;
 use App\Models\Content;
 use App\Models\ContentType;
 use App\Models\RequestContent;
 use App\Serializers\DataSerializer;
 use App\Transformers\ContentTransformer;
-use Illuminate\Http\Client\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
@@ -32,19 +33,57 @@ class ContentsController extends Controller
         return response()->json($data);
     }
 
+    public function getContentById(Request $request, string $id): JsonResponse
+    {
+        $content = Content::query()->find($id);
+        if (!$content) {
+            return response()->json(["message" => 'Content not found'], 404);
+        }
+        $includes = $request->include ?? [];
+        $data = fractal()
+            ->item($content)
+            ->transformWith(new ContentTransformer())
+            ->parseIncludes($includes)
+            ->serializeWith(new DataSerializer());
+        return response()->json($data);
+    }
+
+    public function createContent(CreateContentRequest $request):JsonResponse
+    {
+        $content = $request->validated();
+        $contentType = ContentType::query()->find($request->type_id);
+        if (!$contentType) {
+            throw ValidationException::withMessages(['type_id' => 'The type id field is invalid']);
+        }
+        Content::query()->create($content);
+        return response()->json(["message" => "Content successfully created"]);
+    }
+    public function updateContentById(UpdateContentRequest $request, string $id):JsonResponse
+    {
+        $content = Content::query()->find($id);
+        if (!$content) return  response()->json(["message" => "Content not found"], 404);
+        $contentUpdate = $request->validated();
+        $contentType = ContentType::query()->find($request->type_id);
+        if (!$contentType && $request->type_id) {
+            throw ValidationException::withMessages(['type_id' => 'The type id field is invalid']);
+        }
+        $content->update($contentUpdate);
+        return response()->json(["message" => "Content was updated"]);
+    }
+    public function deleteContentById(string $id):JsonResponse
+    {
+        $content = Content::query()->find($id);
+        if (!$content) return response()->json(["message" => "Content not found"], 404);
+        $content->delete();
+        return response()->json(["message" => "Content successfully was deleted"]);
+    }
+
     /**
      * @throws ValidationException
      */
-    public function requestContent(Request $request): JsonResponse
+    public function requestContent(CreateContentRequest $request): JsonResponse
     {
-        $content = $request->validate([
-            'name' => 'required',
-            'description' => 'string|nullable',
-            'release_date' => 'date|nullable',
-            'end_date' => 'data|nullable',
-            'type_id' => 'integer|required',
-            'current_status' => [new Enum(CurrentContentStatus::class), 'required']
-        ]);
+        $content = $request->validated();
         $contentType = ContentType::query()->find($request->type_id);
         if (!$contentType) {
             throw ValidationException::withMessages(['type_id' => 'The type id field is invalid']);
@@ -56,7 +95,8 @@ class ContentsController extends Controller
     /**
      * @throws ValidationException
      */
-    public function cancelRequestContent(string $id): JsonResponse {
+    public function cancelRequestContent(string $id): JsonResponse
+    {
         $request = RequestContent::query()->find($id);
         if (!$request) {
             throw ValidationException::withMessages(['request' => 'Invalid request id was given']);
@@ -68,7 +108,8 @@ class ContentsController extends Controller
     /**
      * @throws ValidationException
      */
-    public function approveRequestContent(string $id):JsonResponse {
+    public function approveRequestContent(string $id): JsonResponse
+    {
         $request = RequestContent::query()->find($id);
         if (!$request) {
             throw ValidationException::withMessages(['request' => 'Invalid request id was given']);

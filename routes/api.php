@@ -36,8 +36,12 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('users')->group(functi
 
 Route::middleware(['auth:sanctum'])->prefix('contents')->group(function() {
    Route::get('/', [ContentsController::class, 'getContents']);
+   Route::get('/{id}', [ContentsController::class, 'getContentById']);
    Route::post('/request', [ContentsController::class, 'requestContent']);
    Route::middleware(['role:admin'])->group(function () {
+       Route::post('/', [ContentsController::class, 'createContent']);
+       Route::patch('/{id}', [ContentsController::class, 'updateContentById']);
+       Route::delete('/{id}', [ContentsController::class, 'deleteContentById']);
        Route::get('/request/{id}/cancel', [ContentsController::class, 'cancelRequestContent']);
        Route::get('/request/{id}/approve', [ContentsController::class, 'approveRequestContent']);
    });
