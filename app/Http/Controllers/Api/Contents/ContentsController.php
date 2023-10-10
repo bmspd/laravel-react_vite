@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Api\Contents;
 
-use App\Enums\CurrentContentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contents\CreateContentRequest;
 use App\Http\Requests\Contents\UpdateContentRequest;
 use App\Models\Content;
+use App\Models\ContentStatus;
 use App\Models\ContentType;
 use App\Models\RequestContent;
 use App\Serializers\DataSerializer;
 use App\Transformers\ContentTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
@@ -117,5 +116,29 @@ class ContentsController extends Controller
         Content::query()->create($request->attributesToArray());
         $request->delete();
         return response()->json(["message" => "Request was approved and added to contents list"]);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function changeUserContentStatus(Request $request, $id):JsonResponse
+    {
+        if (!Content::query()->find($id)) {
+            return response()->json(["message" => "Content not found"], 404);
+        }
+        if (!ContentStatus::query()->find($request->status_id) && $request->status_id) {
+            throw ValidationException::withMessages(['status_id' => 'Invalid status id']);
+        }
+        $request
+            ->user()
+            ->contents()
+            ->syncWithoutDetaching([$id => ['status_id' => $request->status_id]]);
+        return response()->json(["message" => 'Successful operation with content']);
+    }
+
+    public function removeContentFromUserList(Request $request, string $id)
+    {
+        $request->user()->contents()->detach([$id]);
+        return response()->json(["message" => "Content was removed from your list"]);
     }
 }

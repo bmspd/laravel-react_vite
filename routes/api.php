@@ -37,6 +37,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('users')->group(functi
 Route::middleware(['auth:sanctum'])->prefix('contents')->group(function() {
    Route::get('/', [ContentsController::class, 'getContents']);
    Route::get('/{id}', [ContentsController::class, 'getContentById']);
+   Route::put('/{id}/status', [ContentsController::class, 'changeUserContentStatus']);
+   Route::delete('list/{id}', [ContentsController::class, 'removeContentFromUserList']);
    Route::post('/request', [ContentsController::class, 'requestContent']);
    Route::middleware(['role:admin'])->group(function () {
        Route::post('/', [ContentsController::class, 'createContent']);

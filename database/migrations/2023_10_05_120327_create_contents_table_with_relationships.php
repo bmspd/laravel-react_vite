@@ -46,7 +46,7 @@ return new class extends Migration
             $table->dropForeign(['user_id', 'content_id']);
         });
         Schema::table('contents', function(Blueprint $table) {
-           $table->dropForeign('type_id');
+           $table->dropForeign(['type_id']);
         });
         Schema::dropIfExists('user_contents');
         Schema::dropIfExists('contents');

@@ -51,6 +51,9 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
     public function contents(): BelongsToMany {
-        return $this->belongsToMany(Content::class, 'user_content', 'user_id', 'content_id');
+        return $this
+            ->belongsToMany(Content::class, 'user_content', 'user_id', 'content_id')
+            ->withPivot(['status_id'])
+            ->using(UserContent::class);
     }
 }
