@@ -19,7 +19,8 @@ class UpdateContentRequest extends FormRequest {
             'release_date' => 'date|nullable',
             'end_date' => 'data|nullable',
             'type_id' => 'integer',
-            'current_status' => [new Enum(CurrentContentStatus::class)]
+            'poster' => 'image|nullable|max:4000',
+            'current_status' => [new Enum(CurrentContentStatus::class)],
         ];
     }
 }

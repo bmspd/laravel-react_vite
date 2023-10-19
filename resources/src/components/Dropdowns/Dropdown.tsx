@@ -1,19 +1,23 @@
-import { Fragment } from 'react'
+import React, {Fragment, ReactElement} from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { IconChevronDown  } from '@tabler/icons-react'
+import DropdownControl, {DropdownControlProps} from './DropdownControl'
 
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ')
+export type DropdownOption = {
+  value: string
+  label: ReactElement | string
+  onClick?: () => void
 }
 
-export default function Dropdown() {
+export interface DropdownProps {
+  options: DropdownOption[],
+  controlProps?: DropdownControlProps,
+}
+
+const Dropdown: React.FC<DropdownProps> = ({ options, controlProps }) => {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="btn">
-          Options
-          <IconChevronDown className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-        </Menu.Button>
+        <DropdownControl {...controlProps}/>
       </div>
 
       <Transition
@@ -25,65 +29,23 @@ export default function Dropdown() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-auto origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                  Account settings
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                  Support
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                  License
-                </a>
-              )}
-            </Menu.Item>
-            <form method="POST" action="#">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    type="submit"
-                    className={classNames(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block w-full px-4 py-2 text-left text-sm'
-                    )}
-                  >
-                    Sign out
-                  </button>
-                )}
+            {options.map((option) => (
+              <Menu.Item
+                as="div"
+                className="whitespace-nowrap text-black px-4 py-2 cursor-pointer hover:bg-sky-100 transition-colors duration-300"
+                key={option.value}
+                onClick={option.onClick}
+              >
+                {() => (typeof option.label === 'string' ? <div>{option.label}</div> : option.label)}
               </Menu.Item>
-            </form>
+            ))}
           </div>
         </Menu.Items>
       </Transition>
     </Menu>
   )
 }
+
+export default Dropdown

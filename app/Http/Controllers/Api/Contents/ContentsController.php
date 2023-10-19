@@ -8,11 +8,14 @@ use App\Http\Requests\Contents\UpdateContentRequest;
 use App\Models\Content;
 use App\Models\ContentStatus;
 use App\Models\ContentType;
+use App\Models\Image;
 use App\Models\RequestContent;
 use App\Serializers\DataSerializer;
 use App\Transformers\ContentTransformer;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
@@ -49,25 +52,49 @@ class ContentsController extends Controller
 
     public function createContent(CreateContentRequest $request):JsonResponse
     {
-        $content = $request->validated();
+        $contentData = $request->validated();
         $contentType = ContentType::query()->find($request->type_id);
         if (!$contentType) {
             throw ValidationException::withMessages(['type_id' => 'The type id field is invalid']);
         }
-        Content::query()->create($content);
-        return response()->json(["message" => "Content successfully created"]);
+        $content = Content::query()->create($contentData);
+        $image = $request->file('poster');
+        if ($image) {
+            $content->addPoster($image);
+        }
+        $data = fractal()
+            ->item($content)
+            ->transformWith(new ContentTransformer())
+            ->serializeWith(new DataSerializer());
+        return response()->json($data);
     }
-    public function updateContentById(UpdateContentRequest $request, string $id):JsonResponse
+
+    /**
+     * @throws ValidationException
+     */
+    public function updateContentById(UpdateContentRequest $request, string $id)
     {
+
         $content = Content::query()->find($id);
         if (!$content) return  response()->json(["message" => "Content not found"], 404);
         $contentUpdate = $request->validated();
-        $contentType = ContentType::query()->find($request->type_id);
-        if (!$contentType && $request->type_id) {
+
+        if (!$content->isValidContentType($request->type_id)) {
             throw ValidationException::withMessages(['type_id' => 'The type id field is invalid']);
         }
+        $image = $request->file('poster');
+        if (isset($request->remove_poster) || $image) {
+            $content->deletePoster();
+        }
+        if ($image) {
+            $content->addPoster($image);
+        }
         $content->update($contentUpdate);
-        return response()->json(["message" => "Content was updated"]);
+        $data = fractal()
+            ->item($content)
+            ->transformWith(new ContentTransformer())
+            ->serializeWith(new DataSerializer());
+        return response()->json($data);
     }
     public function deleteContentById(string $id):JsonResponse
     {
@@ -82,13 +109,21 @@ class ContentsController extends Controller
      */
     public function requestContent(CreateContentRequest $request): JsonResponse
     {
-        $content = $request->validated();
+        $contentData = $request->validated();
         $contentType = ContentType::query()->find($request->type_id);
         if (!$contentType) {
             throw ValidationException::withMessages(['type_id' => 'The type id field is invalid']);
         }
-        RequestContent::query()->create($content);
-        return response()->json(["message" => 'Request successfully made']);
+        $reqContent = RequestContent::query()->create($contentData);
+        $image = $request->file('poster');
+        if ($image) {
+            $reqContent->addPoster($image);
+        }
+        $data = fractal()
+            ->item($reqContent)
+            ->transformWith(new ContentTransformer())
+            ->serializeWith(new DataSerializer());
+        return response()->json($data);
     }
 
     /**
@@ -100,6 +135,7 @@ class ContentsController extends Controller
         if (!$request) {
             throw ValidationException::withMessages(['request' => 'Invalid request id was given']);
         }
+        $request->deletePoster();
         $request->delete();
         return response()->json(["message" => "Request was canceled"]);
     }
@@ -113,9 +149,15 @@ class ContentsController extends Controller
         if (!$request) {
             throw ValidationException::withMessages(['request' => 'Invalid request id was given']);
         }
-        Content::query()->create($request->attributesToArray());
+        $content = Content::query()->create($request->attributesToArray());
+        $poster = $request->detachPoster();
+        $content->attachPoster($poster);
         $request->delete();
-        return response()->json(["message" => "Request was approved and added to contents list"]);
+        $data = fractal()
+            ->item($content)
+            ->transformWith(new ContentTransformer())
+            ->serializeWith(new DataSerializer());
+        return response()->json($data);
     }
 
     /**

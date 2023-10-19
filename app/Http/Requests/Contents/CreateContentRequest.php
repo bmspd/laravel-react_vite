@@ -19,7 +19,8 @@ class CreateContentRequest extends FormRequest {
             'release_date' => 'date|nullable',
             'end_date' => 'data|nullable',
             'type_id' => 'integer|required',
-            'current_status' => [new Enum(CurrentContentStatus::class), 'required']
+            'current_status' => [new Enum(CurrentContentStatus::class), 'required'],
+            'poster' => 'image|nullable|max:4000',
         ];
     }
 }
