@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
+
+/**
+ * @mixin IdeHelperImage
+ */
 class Image extends Model
 {
     use HasFactory;

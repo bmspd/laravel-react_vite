@@ -9,12 +9,12 @@ const Menu = () => {
     <Transition
       show={isMenuOpen}
       as={Fragment}
-      enter="transition-all duration-300"
-      enterFrom="-left-96"
-      enterTo="left-0"
-      leave="transition-all duration-300"
-      leaveFrom="left-0"
-      leaveTo="-left-96"
+      enter="transition-all ease duration-300"
+      enterFrom="-translate-x-96"
+      enterTo="translate-x-0"
+      leave="transition-all ease duration-300"
+      leaveFrom="translate-x-0"
+      leaveTo="-translate-x-96"
     >
       <div className="fixed left-0 top-16 bg-white/30 p-4 backdrop-blur-sm h-full w-96 z-10">MENU</div>
     </Transition>

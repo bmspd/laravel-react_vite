@@ -10,9 +10,11 @@ use App\Models\ContentStatus;
 use App\Models\ContentType;
 use App\Models\Image;
 use App\Models\RequestContent;
+use App\Models\UserContent;
 use App\Serializers\DataSerializer;
 use App\Transformers\ContentTransformer;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,8 +26,8 @@ class ContentsController extends Controller
     public function getContents(Request $request): JsonResponse
     {
         $perPage = $request->query('per_page') ?? config('defaults.pagination.per_page');
-        $contents = Content::query()->paginate($perPage);
         $includes = $request->include ?? [];
+        $contents = Content::withUserInfo($request->user())->paginate($perPage);
         $data = fractal()
             ->collection($contents)
             ->transformWith(new ContentTransformer())
@@ -182,5 +184,33 @@ class ContentsController extends Controller
     {
         $request->user()->contents()->detach([$id]);
         return response()->json(["message" => "Content was removed from your list"]);
+    }
+
+    public function getUserContents(Request $request)
+    {
+        $perPage = $request->query('per_page') ?? config('defaults.pagination.per_page');
+        $contents = $request->user()->contents()->paginate($perPage);
+        $includes = $request->include ?? [];
+        $data = fractal()
+            ->collection($contents)
+            ->transformWith(new ContentTransformer())
+            ->paginateWith(new IlluminatePaginatorAdapter($contents))
+            ->parseIncludes($includes)
+            ->serializeWith(new DataSerializer());
+        return response()->json($data);
+    }
+
+    public function getRequestContents(Request $request)
+    {
+        $perPage = $request->query('per_page') ?? config('defaults.pagination.per_page');
+        $contents = RequestContent::query()->paginate($perPage);
+        $includes = $request->include ?? [];
+        $data = fractal()
+            ->collection($contents)
+            ->transformWith(new ContentTransformer())
+            ->paginateWith(new IlluminatePaginatorAdapter($contents))
+            ->parseIncludes($includes)
+            ->serializeWith(new DataSerializer());
+        return response()->json($data);
     }
 }

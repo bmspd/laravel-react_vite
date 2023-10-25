@@ -18,7 +18,7 @@ const Main = () => {
             description="Films, manga, books..."
             icon={<IconKeyframes width="32" height="32" />}
             buttonText="Browse all"
-            linkTo="/content"
+            linkTo="/contents"
           />
           <LinkCard
             imgUrl={listUrl}

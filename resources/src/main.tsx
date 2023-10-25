@@ -9,6 +9,7 @@ import AuthLayout from './layouts/AuthLayout';
 import LoginPage from './routes/Login/LoginPage';
 import SignUpPage from './routes/SignUp/SignUpPage';
 import GetUserInfoLayout from "./layouts/GetUserInfoLayout";
+import ContentsPage from "./routes/Contents/ContentsPage";
 
 const router = createBrowserRouter([
   {
@@ -31,8 +32,8 @@ const router = createBrowserRouter([
         element: <AuthLayout />,
         children: [
           {
-            path: '/test',
-            element: <div>TEST</div>,
+            path: '/contents',
+            element: <ContentsPage />
           },
         ],
       },

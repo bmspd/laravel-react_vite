@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {IconUserCircle, IconLayoutSidebarLeftExpand, IconLogout, IconOutbound} from '@tabler/icons-react'
+import {IconUserCircle, IconLayoutSidebarLeftExpand, IconOutbound} from '@tabler/icons-react'
 import Button from '../components/Buttons/Button'
 import { selectIsAuth, selectUser } from '../store/reducers/AuthSlice/selectors'
 import { useTypedDispatch, useTypedSelector } from '../hooks/storeHooks'

@@ -11,6 +11,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 
+
+/**
+ * @mixin IdeHelperUser
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -53,7 +57,7 @@ class User extends Authenticatable
     public function contents(): BelongsToMany {
         return $this
             ->belongsToMany(Content::class, 'user_content', 'user_id', 'content_id')
-            ->withPivot(['status_id'])
+            ->withPivot(['status_id', 'rating'])
             ->using(UserContent::class);
     }
 }

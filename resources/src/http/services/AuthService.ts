@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios'
 import $http from '../index'
 import { IUser } from '../../interfaces/User'
 

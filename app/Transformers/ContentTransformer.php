@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use App\Models\Content;
 use App\Models\RequestContent;
+use App\Models\UserContent;
 use League\Fractal\TransformerAbstract;
 
 class ContentTransformer extends TransformerAbstract {
@@ -11,7 +12,8 @@ class ContentTransformer extends TransformerAbstract {
         'type'
     ];
     protected array $defaultIncludes = [
-        'poster'
+        'poster',
+        'info'
     ];
     public function transform(Content|RequestContent $content):array {
         return [
@@ -22,7 +24,7 @@ class ContentTransformer extends TransformerAbstract {
             'end_date' => $content->end_date,
             'type_id' => $content->type_id,
             'current_status' => $content->current_status,
-            'poster_id' => $content->poster_id
+            'poster_id' => $content->poster_id,
         ];
     }
     public function includeType(Content|RequestContent $content) {
@@ -34,5 +36,12 @@ class ContentTransformer extends TransformerAbstract {
         $poster = $content->poster;
         if (!$poster) return null;
         return $this->item($poster, new ImageTransformer);
+    }
+    public function includeInfo(Content|RequestContent $content) {
+        $info = $content->pivot;
+        // что-то это выглядит как плохое решение
+        if ($content->user_content_id && !$content->pivot) $info = UserContent::query()->find($content->user_content_id);
+        if (!$info) return null;
+        return $this->item($info, new UserContentInfoTransformer);
     }
 }

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {login, whoAmI} from './asyncThunks'
 import { IUser } from '../../../interfaces/User'
-import $http from "../../../http";
 
 type AuthState = {
   isAuth: boolean

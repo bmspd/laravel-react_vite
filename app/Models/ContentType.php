@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder;
 
+
+/**
+ * @mixin IdeHelperContentType
+ */
 class ContentType extends Model
 {
     use HasFactory;

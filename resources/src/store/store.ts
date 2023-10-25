@@ -1,10 +1,12 @@
 import { AnyAction, combineReducers, configureStore } from '@reduxjs/toolkit'
 import AuthSlice, { resetStore } from './reducers/AuthSlice/AuthSlice'
 import InterfaceSlice from "./reducers/InterfaceSlice/InterfaceSlice";
+import ContentsSlice from "./reducers/ContentsSlice/ContentsSlice";
 
 const rootReducer = combineReducers({
   auth: AuthSlice,
-  interface: InterfaceSlice
+  interface: InterfaceSlice,
+  contents: ContentsSlice
 })
 const reducerProxy = (state: RootState | undefined, action: AnyAction) => {
   if (action.type === resetStore.type) {
