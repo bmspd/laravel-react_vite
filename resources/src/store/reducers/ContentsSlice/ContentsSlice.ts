@@ -3,8 +3,8 @@ import {IContent} from "../../../interfaces/Content";
 import {getAllContents} from "./asyncThunks";
 import {DataWithMeta} from "../../../interfaces/Data";
 
-type ContentsState = {
-  contents: DataWithMeta<IContent, 'pagination'>
+export type ContentsState = {
+  contents: DataWithMeta<IContent, 'pagination' | 'timestamps'>
 }
 const initialState: ContentsState = {
   contents: {
@@ -18,7 +18,14 @@ export const contentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => builder.addCase(getAllContents.fulfilled, (state, action) => {
     const { payload } = action
-    state.contents = payload
+    const {contents} = state
+    const {pagination} = contents.meta
+    if (!pagination || action.meta.arg.page === 1) {
+      state.contents = payload
+    }
+    else if (pagination.current_page < pagination.total_pages) {
+      state.contents = {data: state.contents.data.concat(payload.data), meta: payload.meta}
+    }
   })
 })
 

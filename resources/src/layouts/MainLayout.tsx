@@ -9,7 +9,7 @@ const MainLayout = () => (
     <Header />
     <div className="flex-grow flex relative">
       <Menu />
-      <div className="flex flex-col justify-between flex-grow" style={{height: '3000px'}}>
+      <div className="flex flex-col justify-between flex-grow">
         <Outlet />
         <Footer />
       </div>

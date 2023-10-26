@@ -11,6 +11,7 @@ import SignUpPage from './routes/SignUp/SignUpPage';
 import GetUserInfoLayout from "./layouts/GetUserInfoLayout";
 import ContentsPage from "./routes/Contents/ContentsPage";
 
+
 const router = createBrowserRouter([
   {
     element: <MainLayout />,

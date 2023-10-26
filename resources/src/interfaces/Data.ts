@@ -4,14 +4,14 @@ export interface Pagination {
   total: number
   total_pages: number
 }
-export interface OtherMeta {
-  test: string
+export interface Timestamps {
+  request_time: string
 }
 export type AllMetaTypes = {
   pagination: Pagination
-  other_meta: OtherMeta
+  timestamps: Timestamps
 }
-export interface DataWithMeta<T, MetaTypes extends 'pagination' | 'other_meta'> {
+export interface DataWithMeta<T, MetaTypes extends 'pagination' | 'timestamps'> {
   data: T[]
   meta: { [Literal in MetaTypes]?: AllMetaTypes[Literal] }
 }

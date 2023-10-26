@@ -10,6 +10,6 @@ export type ContentsRequestParams = {
 
 export default class ContentsService {
   static async getContents(params: ContentsRequestParams) {
-    return $http.get<DataWithMeta<IContent, 'pagination'>>('contents', {params})
+    return $http.get<DataWithMeta<IContent, 'pagination' | 'timestamps'>>('contents', {params})
   }
 }

@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers\Api\Contents;
 
+use App\Helpers\MetaTimeHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contents\CreateContentRequest;
 use App\Http\Requests\Contents\UpdateContentRequest;
 use App\Models\Content;
 use App\Models\ContentStatus;
 use App\Models\ContentType;
-use App\Models\Image;
 use App\Models\RequestContent;
-use App\Models\UserContent;
 use App\Serializers\DataSerializer;
 use App\Transformers\ContentTransformer;
-use Illuminate\Database\Eloquent\Relations\Pivot;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
@@ -33,7 +29,8 @@ class ContentsController extends Controller
             ->transformWith(new ContentTransformer())
             ->paginateWith(new IlluminatePaginatorAdapter($contents))
             ->parseIncludes($includes)
-            ->serializeWith(new DataSerializer());
+            ->serializeWith(new DataSerializer())
+            ->addMeta(MetaTimeHelper::addTimestamps(['request_time']));
         return response()->json($data);
     }
 
