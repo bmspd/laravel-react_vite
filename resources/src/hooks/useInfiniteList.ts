@@ -13,6 +13,7 @@ export const useInfiniteList = <Data extends DataWithMeta<unknown, 'pagination'>
   const onScroll = () => {
     if (!html) return
     if (html.scrollTop + html.clientHeight >= html.scrollHeight) {
+      console.log('i am here')
       const { pagination } = data.meta
       if (pagination && pagination.current_page < pagination.total_pages) {
         fetchCb({ page: pagination.current_page + 1, per_page: 2 })

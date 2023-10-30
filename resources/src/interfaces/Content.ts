@@ -6,7 +6,7 @@ export interface IContent {
   description: string | null
   release_date: string | null
   end_date: string | null
-  currentStatus: ContentCurrentStatus | null
+  current_status: ContentCurrentStatus | null
   type_id: number
   type?: ContentType
   poster_id: number | null

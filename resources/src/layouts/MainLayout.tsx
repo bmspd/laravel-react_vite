@@ -10,7 +10,7 @@ const MainLayout = () => (
     <div className="flex-grow flex relative">
       <Menu />
       <div className="flex flex-col justify-between flex-grow">
-        <Outlet />
+        <div className="p-4"><Outlet /></div>
         <Footer />
       </div>
     </div>
